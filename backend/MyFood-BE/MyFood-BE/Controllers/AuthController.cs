@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+﻿using BussinesLayer.UnitOfWork;
+using DataBaseLayer.Models.Users;
+using DataBaseLayer.ViewModels.Users;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace MyFood_BE.Controllers
 {
@@ -11,26 +11,23 @@ namespace MyFood_BE.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        public IActionResult BuildToken()
+        private readonly IUnitOfWork _services;
+        private readonly UserManager<AppUser> _user;
+        private readonly SignInManager<AppUser> _signInManager;
+        public AuthController(IUnitOfWork services, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
         {
-            var claims = new[]
-            {
-                //utilizamos los claims para enviar algunas informaciones
-                new Claim(JwtRegisteredClaimNames.UniqueName, "test@x"),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            };
-            //creanos una llave secreta y la configuramos como variable de entorno
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("axsamksxASLALAaklsdak(O)smdas(R)dasda(B)d23a1(I)sda5(S)s89das51as5x61asx7a1sc4asdsa;f;;'.dqw,q;qdq[1]'asdasda[]asdaasaasasdaxals;xas4616axs8aq87ewq1dasd*d/*/*a/*da/sda/s*d/s*ad*sa/d*/d"));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            _services = services;
+            _user = userManager;
+            _signInManager = signInManager;
+        }
 
-
-            JwtSecurityToken token = new JwtSecurityToken(
-               issuer: "devteams.com",
-               audience: "devteams.com",
-               claims: claims,
-               signingCredentials: creds);
-
-            return Ok(new JwtSecurityTokenHandler().WriteToken(token));
+        [HttpPost]
+        public async Task<IActionResult> BuildToken(LoginUserVm user)
+        {
+            var loginResult = await _signInManager.PasswordSignInAsync(user.UserName, user.Password, false, false);
+            if (!loginResult.Succeeded) return BadRequest($"Credenciales incorrectas intente de nuevo");
+            var token = await _services.AuthService.BuildToken(user);
+            return Ok(new { Token = token, user.UserName });
         }
     }
 }

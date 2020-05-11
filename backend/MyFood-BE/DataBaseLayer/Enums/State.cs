@@ -7,6 +7,13 @@ namespace DataBaseLayer.Enums
     public enum State
     {
         Active,
-        Deleted
+        Deleted,
+        NotAvaible,
+
+        #region For Orders
+        Pending,
+        Proccess,
+        Canceled
+        #endregion
     }
 }

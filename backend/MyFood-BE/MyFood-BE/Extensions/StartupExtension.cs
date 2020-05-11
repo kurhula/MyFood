@@ -1,4 +1,7 @@
-﻿using DataBaseLayer.Models.Users;
+﻿using AutoMapper;
+using BussinesLayer.UnitOfWork;
+using DataBaseLayer.Enums.Auth;
+using DataBaseLayer.Models.Users;
 using DataBaseLayer.Options;
 using DataBaseLayer.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -7,6 +10,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -66,6 +71,34 @@ namespace MyFood_BE.Extensions
                });
         }
 
+        public static void ServiceImplementations(this IServiceCollection services) => services.AddTransient<IUnitOfWork, UnitOfWork>();
+
+        public static void AddOptionsConfiguration(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<JwtConfig>(configuration.GetSection(nameof(JwtConfig)));
+        }
+
+        public static void AddDocApi(this IServiceCollection services, IConfiguration configuration)
+        {
+            var result = configuration.GetSection(nameof(SwaggerConfig));
+            services.AddSwaggerGen(x =>
+            {
+                x.SwaggerDoc(result[nameof(SwaggerConfig.Version)],
+                    new OpenApiInfo
+                    {
+                        Title = "Api Doc",
+                        Version = result[nameof(SwaggerConfig.Version)]
+                    });
+            });
+        }
+
+        public static void AuthoMapperConfiguration(this IServiceCollection services)
+        {
+            services.AddAutoMapper(typeof(Startup));
+        }
+
+        public static void ClaimsAuth(this IServiceCollection services)
+            => services.AddAuthorization(x => x.AddPolicy("Rol", pol => pol.RequireRole(nameof(AuthLevel.Admin), nameof(AuthLevel.Restaurant), nameof(AuthLevel.User))));
 
     }
 }
