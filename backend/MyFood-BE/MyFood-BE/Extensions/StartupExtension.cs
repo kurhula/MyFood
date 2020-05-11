@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BussinesLayer.UnitOfWork;
 using DataBaseLayer.Enums.Auth;
+using DataBaseLayer.Mappings;
 using DataBaseLayer.Models.Users;
 using DataBaseLayer.Options;
 using DataBaseLayer.Persistence;
@@ -94,7 +95,7 @@ namespace MyFood_BE.Extensions
 
         public static void AuthoMapperConfiguration(this IServiceCollection services)
         {
-            services.AddAutoMapper(typeof(Startup));
+            services.AddAutoMapper(typeof(MappingProfile));
         }
 
         public static void ClaimsAuth(this IServiceCollection services)

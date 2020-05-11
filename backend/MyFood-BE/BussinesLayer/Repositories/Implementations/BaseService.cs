@@ -1,4 +1,5 @@
 ﻿using BussinesLayer.Repositories.Interfaces;
+using DataBaseLayer.ViewModels.Pagination;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ namespace BussinesLayer.Repositories.Implementations
 
         public virtual IQueryable<TEntity> GetAllQueryable(Expression<Func<TEntity, bool>> expression = null)
         {
-            if (expression == null) return _dbContext.Set<TEntity>();
+            if (expression == null) return _dbContext.Set<TEntity>().AsQueryable();
             return _dbContext.Set<TEntity>().Where(expression);
         }
 
@@ -42,6 +43,26 @@ namespace BussinesLayer.Repositories.Implementations
         {
             _dbContext.Set<TEntity>().Update(model);
             return await _dbContext.SaveChangesAsync() > 0;
+        }
+
+        public async Task<bool> CommitAsync()
+        {
+            var result = true;
+            using var transaction = _dbContext.Database.BeginTransaction();
+            {
+                try
+                {
+                    await _dbContext.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    result = false;
+                    await transaction.RollbackAsync();
+                    Console.WriteLine(ex.InnerException.Message);
+                }
+            }
+            return result;
         }
     }
 }

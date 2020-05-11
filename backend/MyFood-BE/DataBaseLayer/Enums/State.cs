@@ -13,7 +13,8 @@ namespace DataBaseLayer.Enums
         #region For Orders
         Pending,
         Proccess,
-        Canceled
+        Canceled,
+        Finish
         #endregion
     }
 }

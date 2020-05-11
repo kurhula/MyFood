@@ -7,6 +7,6 @@ namespace BussinesLayer.Repositories.Interfaces
 {
     public interface IHelperRepository
     {
-        
+        Task<bool> SoftDelete<T>(T id) where T : IEquatable<T>;
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DataBaseLayer.ViewModels.Pagination;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,5 +17,6 @@ namespace BussinesLayer.Repositories.Interfaces
         Task<bool> Add(TEntity model);
         Task<bool> Update(TEntity model);
         Task<bool> Remove(TEntity model);
+        Task<bool> CommitAsync();
     }
 }
