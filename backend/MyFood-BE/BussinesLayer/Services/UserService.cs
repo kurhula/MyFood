@@ -3,12 +3,15 @@ using AutoMapper.QueryableExtensions;
 using BussinesLayer.Interfaces;
 using BussinesLayer.Repositories.Implementations;
 using DataBaseLayer.Enums.Auth;
+using DataBaseLayer.Models.Restaurants;
 using DataBaseLayer.Models.Users;
+using DataBaseLayer.Options;
 using DataBaseLayer.Persistence;
 using DataBaseLayer.ViewModels.Pagination;
 using DataBaseLayer.ViewModels.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,11 +26,13 @@ namespace BussinesLayer.Services
         private readonly ApplicationDbContext _dbContext;
         private readonly UserManager<AppUser> _userManager;
         private readonly IMapper _mapper;
-        public UserService(ApplicationDbContext context, UserManager<AppUser> userManager , IMapper mapper) : base(context)
+        private readonly RestaurantConfig _options;
+        public UserService(ApplicationDbContext context, UserManager<AppUser> userManager , IMapper mapper , IOptions<RestaurantConfig> options) : base(context)
         {
             _dbContext = context;
             _userManager = userManager;
             _mapper = mapper;
+            _options = options.Value;
         }
 
         public async Task<bool> CreateUser(CreateUserVM model)
@@ -41,6 +46,12 @@ namespace BussinesLayer.Services
             };
             await _userManager.CreateAsync(user, model.Password);
             await _userManager.AddToRoleAsync(user, model.Rol == AuthLevel.Restaurant ? nameof(AuthLevel.Restaurant) : nameof(AuthLevel.User));
+            if(model.Rol == AuthLevel.Restaurant)
+            {
+                _options.AppUserId = user.Id;
+                var restaurant = _mapper.Map<Restaurant>(_options);
+                await _dbContext.Restaurants.AddAsync(restaurant);
+            }
             return await CommitAsync();
         }
 

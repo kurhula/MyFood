@@ -10,5 +10,6 @@ namespace BussinesLayer.UnitOfWork
     {
         IAuthService AuthService { get; }
         IUserService UserService { get; }
+        IRestaurantService RestaurantService { get; }
     }
 }

@@ -16,7 +16,7 @@ namespace BussinesLayer.Repositories.Implementations
         public virtual async Task<bool> Add(TEntity model)
         {
             await _dbContext.Set<TEntity>().AddAsync(model);
-            return await _dbContext.SaveChangesAsync() > 0;
+            return await CommitAsync();
         }
 
         public virtual async Task<IEnumerable<TEntity>> GetAll(Expression<Func<TEntity,bool>> expression = null)
@@ -36,13 +36,13 @@ namespace BussinesLayer.Repositories.Implementations
         public virtual async Task<bool> Remove(TEntity model)
         {
             _dbContext.Remove(model);
-            return await _dbContext.SaveChangesAsync() > 0;
+            return await CommitAsync();
         }
 
         public virtual async Task<bool> Update(TEntity model)
         {
             _dbContext.Set<TEntity>().Update(model);
-            return await _dbContext.SaveChangesAsync() > 0;
+            return await CommitAsync();
         }
 
         public async Task<bool> CommitAsync()

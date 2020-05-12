@@ -77,6 +77,8 @@ namespace MyFood_BE.Extensions
         public static void AddOptionsConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<JwtConfig>(configuration.GetSection(nameof(JwtConfig)));
+            services.Configure<RestaurantConfig>(configuration.GetSection(nameof(RestaurantConfig)));
+
         }
 
         public static void AddDocApi(this IServiceCollection services, IConfiguration configuration)

@@ -23,7 +23,6 @@ namespace DataBaseLayer.Models.Restaurants
         public string Description { get; set; }
         [Required]
         public string PhoneNumber { get; set; }
-        [Required]
         public string Code { get; set; } = StringHelper.GetCode();
         public string Logo { get; set; }
         [Required]

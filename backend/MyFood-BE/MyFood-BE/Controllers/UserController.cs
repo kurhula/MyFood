@@ -2,10 +2,12 @@
 using BussinesLayer.UnitOfWork;
 using DataBaseLayer.Enums.Auth;
 using DataBaseLayer.Models.Users;
+using DataBaseLayer.Options;
 using DataBaseLayer.ViewModels.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System.Threading.Tasks;
 
 namespace MyFood_BE.Controllers
@@ -24,6 +26,7 @@ namespace MyFood_BE.Controllers
         }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(AuthLevel.Admin) + "," + nameof(AuthLevel.Restaurant))]
+        [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery]FilterUserVM model = null)
             => Ok(await _services.UserService.GetAllPaginated(model));
 
@@ -35,6 +38,7 @@ namespace MyFood_BE.Controllers
             if (!result) return BadRequest("Error, Intente de nuevo mas tarde");
             return Ok(result);
         }
+
         [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetById(string id)

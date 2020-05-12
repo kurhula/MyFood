@@ -14,7 +14,7 @@ namespace DataBaseLayer.Enums
         Pending,
         Proccess,
         Canceled,
-        Finish
+        Delivered
         #endregion
     }
 }
