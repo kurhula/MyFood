@@ -1,6 +1,7 @@
 ﻿using BussinesLayer.Interfaces;
 using BussinesLayer.Repositories.Implementations;
 using BussinesLayer.Repositories.Interfaces;
+using Commons.Helpers;
 using DataBaseLayer.Models.Restaurants;
 using DataBaseLayer.Persistence;
 using DataBaseLayer.ViewModels.Pagination;
@@ -24,7 +25,7 @@ namespace BussinesLayer.Services
             var result = GetAllQueryable();
             if (expression != null) result = result.Where(expression);
 
-            var total =  await result.CountAsync();
+            var total = await result.CountAsync();
             var pages = total / quantity;
 
             return new Pagination<Restaurant>
@@ -37,6 +38,15 @@ namespace BussinesLayer.Services
         }
 
         public async Task<Restaurant> GetByUserId(string userId) => await _dbcontext.Restaurants.FirstOrDefaultAsync(x => x.AppUserId == userId);
+
+        public async Task<bool> SetRating(Guid id, int newRating)
+        {
+            var restaurant = await GetById(id);
+            restaurant.StarsQuantity += 1;
+            restaurant.StartsTotal += newRating;
+            restaurant.Stars = MathHelper.Rating(restaurant.StartsTotal, restaurant.StarsQuantity);
+            return await Update(restaurant);
+        }
 
         public async Task<bool> SoftRemove(Guid id)
         {

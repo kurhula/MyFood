@@ -28,6 +28,8 @@ namespace DataBaseLayer.Models.Restaurants
         [Required]
         public string Title { get; set; }
         public decimal Stars { get; set; }
+        public int StarsQuantity { get; set; } = 0;
+        public int StartsTotal { get; set; }
         public string AppUserId { get; set; }
         public AppUser User { get; set; }
         public virtual IEnumerable<Food> Foods { get; set; }

@@ -9,4 +9,9 @@ namespace BussinesLayer.Repositories.Interfaces
     {
         Task<bool> SoftDelete<T>(T id) where T : IEquatable<T>;
     }
+
+    public interface IRatingRepository
+    {
+        Task<bool> SetRating(Guid id , int newRating);
+    }
 }

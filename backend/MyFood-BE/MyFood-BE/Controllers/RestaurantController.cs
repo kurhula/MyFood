@@ -1,5 +1,6 @@
 ﻿using BussinesLayer.UnitOfWork;
 using DataBaseLayer.Models.Restaurants;
+using DataBaseLayer.ViewModels.Rating;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -50,6 +51,14 @@ namespace MyFood_BE.Controllers
         {
             var result = await _services.RestaurantService.GetByUserId(userId);
             if (result == null) return BadRequest("Lo sentimos, este restaurante no existe");
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddRating(SetRating model)
+        {
+            var result = await _services.RestaurantService.SetRating(model.Id, model.Rating);
+            if(!result) return BadRequest("Intente de nuevo mas tarde");
             return Ok(result);
         }
     }

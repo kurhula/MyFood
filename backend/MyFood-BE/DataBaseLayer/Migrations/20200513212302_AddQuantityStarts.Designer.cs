@@ -4,14 +4,16 @@ using DataBaseLayer.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataBaseLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200513212302_AddQuantityStarts")]
+    partial class AddQuantityStarts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -82,9 +84,6 @@ namespace DataBaseLayer.Migrations
                     b.Property<int>("StarsQuantity")
                         .HasColumnType("int");
 
-                    b.Property<int>("StartsTotal")
-                        .HasColumnType("int");
-
                     b.Property<int>("State")
                         .HasColumnType("int");
 
@@ -129,6 +128,9 @@ namespace DataBaseLayer.Migrations
 
                     b.Property<decimal>("Stars")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("StarsQuantity")
+                        .HasColumnType("int");
 
                     b.Property<int>("State")
                         .HasColumnType("int");
@@ -190,9 +192,6 @@ namespace DataBaseLayer.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("StarsQuantity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StartsTotal")
                         .HasColumnType("int");
 
                     b.Property<int>("State")

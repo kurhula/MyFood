@@ -13,6 +13,10 @@ namespace DataBaseLayer.Models.Foods
         [Required]
         public string Code { get; set; } = StringHelper.GetCode(5);
         public decimal Stars { get; set; }
+        public int StarsQuantity { get; set; }
+        public int StartsTotal { get; set; }
+
+
         [Required]
         public decimal Price { get; set; }
         [Required]

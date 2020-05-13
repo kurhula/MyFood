@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BussinesLayer.Interfaces
 {
-    public interface IRestaurantService : IBaseRepository<Restaurant,ApplicationDbContext> , IFilterRepository<Restaurant> 
+    public interface IRestaurantService : IBaseRepository<Restaurant,ApplicationDbContext> , IFilterRepository<Restaurant> , IRatingRepository
     {
         Task<bool> SoftRemove(Guid id);
         Task<Restaurant> GetByUserId(string userId);
